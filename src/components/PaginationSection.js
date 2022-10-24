@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pagination } from "@mui/material";
 
-const PaginationSection = () => {
+const PaginationSection = ({ numOfPages }) => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const onChange = (e, numOfPage) => {
@@ -37,7 +37,7 @@ const PaginationSection = () => {
       }}
     >
       {/* put dynamic number of pages */}
-      <Pagination onChange={onChange} count={10} />
+      <Pagination onChange={onChange} count={numOfPages} />
     </div>
   );
 };
