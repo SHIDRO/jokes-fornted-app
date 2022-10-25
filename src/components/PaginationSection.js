@@ -37,7 +37,7 @@ const PaginationSection = ({ numOfPages }) => {
       }}
     >
       {/* put dynamic number of pages */}
-      <Pagination onChange={onChange} count={numOfPages} />
+      <Pagination color="primary" onChange={onChange} count={numOfPages} />
     </div>
   );
 };

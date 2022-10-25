@@ -1,17 +1,17 @@
 import { Grid, Typography, Container } from "@mui/material";
 import JokesItem from "./JokesItem";
 
-const Jokes = ({ jokes }) => {
+const Jokes = ({ jokes, profilePage, adminPage }) => {
   return (
     <Container maxWidth="lg">
       <Grid
         sx={{
+          padding: "auto",
           margin: "auto",
           display: "flex",
-          flexDiraction: "column",
           alignItems: "center",
           justifyItems: "center",
-          textAlign: "center"
+          textAlign: "center",
         }}
         container
         spacing={2}
@@ -19,15 +19,23 @@ const Jokes = ({ jokes }) => {
         {jokes.map((j, index) => {
           return (
             <Grid
-              key={index}
+              key={j._id}
               sx={{ margin: "auto" }}
               item
-              lg={4}
+              lg={6}
               md={6}
               sm={6}
               xs={12}
             >
-              <JokesItem title={j.title} content={j.content} likes={j.likes} />
+              <JokesItem
+                id={j._id}
+                adminPage={adminPage}
+                title={j.title}
+                content={j.content}
+                likes={j.likes}
+                approved={j.approved}
+                profilePage={profilePage}
+              />
             </Grid>
           );
         })}

@@ -65,8 +65,8 @@ const Login = () => {
         throw new Error(resData.message);
       }
         console.log(resData)
-        let isAdmin = resData.userData.isAdmin;
-        login(resData.token, false, isAdmin);
+        // let isAdmin = resData.userData.isAdmin;
+        login(resData.token, false, resData.userData);
         navigate('/');
     })
     .catch(err => {

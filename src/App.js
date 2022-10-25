@@ -10,6 +10,9 @@ import { authContext } from "./store/AuthContextProvider";
 import PostJoke from "./Pages/PostJoke";
 import { useDispatch, useSelector } from "react-redux";
 import {jokesActions} from './store/store';
+import Home from './Pages/Home';
+import Profile from "./Pages/Profile";
+import Admin from "./Pages/Admin";
 
 const routes = [
   { path: "/", index: 0 },
@@ -35,7 +38,7 @@ function App() {
 
   const dispatch = useDispatch();
 
-  console.log(authCtx);
+  // console.log(jokes);
   // console.log("Re-rendered");
   // console.log(authCtx);
   // console.log(tabValue);
@@ -49,14 +52,60 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if(!authCtx.token) return;
+
+    fetch('http://localhost:8080/auth/get-user-data', {
+      method: 'GET',
+      headers: {
+        'Authorization': authCtx.token
+      }
+    })
+    .then(res => {
+      if(res.status !== 200){
+        throw new Error('Failed to fetch userData');
+      }
+      return res.json();
+    })
+    .then(resData => {
+      
+      authCtx.login(authCtx.token, true, resData.userData);
+    })
+    .catch(console.log)
+  }, [authCtx.token]);
+
+  useEffect(() => {
     const currentTime = new Date().getTime();
     const expirationDate = localStorage.getItem("expiration-date");
 
     if (currentTime < expirationDate) {
       const token = localStorage.getItem("JWT-key");
-      authCtx.login(token, true);
+      authCtx.login(token, true, {isAdmin: false});
     }
   }, []);
+
+  useEffect(()=>{
+    if(!authCtx.isAdmin || !authCtx.isLoggedIn || !authCtx.token) return;
+
+    fetch('http://localhost:8080/joker/pending-jokes', {
+      method: 'GET',
+      headers: {
+        'Authorization': authCtx.token
+      }
+    })
+    .then(res => {
+      if(res.status !== 200){
+        throw new Error('Failed to fetch pending jokes');
+      }
+      return res.json();
+    })
+    .then(resData => {
+      // console.log(resData)
+      dispatch(jokesActions.setAdminJokes(resData.jokes));
+    })
+    .catch(console.log)
+
+  }, [authCtx, dispatch]);
+
 
   useEffect(() => {
     if(!authCtx.token || !authCtx.isLoggedIn)return;
@@ -74,7 +123,7 @@ function App() {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
+        // console.log(resData);
         dispatch(jokesActions.setUserJokes(resData.jokes));
       })
       .catch((err) => {
@@ -91,7 +140,7 @@ function App() {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
+        // console.log(resData);
         dispatch(jokesActions.setGlobalJokes(resData.jokes));
       })
       .catch((err) => {
@@ -100,26 +149,26 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div dir="rtl">
+    <div>
       <Navigator tabValue={tabValue} setTabValue={setTabValue} />
 
       <Container maxWidth="lg">
         <Routes>
-          <Route path="/" element={<h1>Home</h1>} />
+          <Route path="/" element={<Home/>} />
 
           {authCtx.isLoggedIn && (
             <Route path="/post-joke" element={<PostJoke />} />
           )}
 
           {authCtx.isLoggedIn && (
-            <Route path="/profile" element={<h1>My Profile</h1>} />
+            <Route path="/profile" element={<Profile/>} />
           )}
 
           {!authCtx.isLoggedIn && <Route path="/login" element={<Login />} />}
 
           {!authCtx.isLoggedIn && <Route path="/signup" element={<Signup />} />}
 
-          {(authCtx.isLoggedIn && authCtx.isLoggedIn && authCtx.isAdmin) && <Route path="/admin" element={<h1>Welcome admin</h1>}/>}
+          {(authCtx.isLoggedIn && authCtx.isLoggedIn && authCtx.isAdmin) && <Route path="/admin" element={<Admin/>}/>}
 
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>

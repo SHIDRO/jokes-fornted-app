@@ -23,6 +23,7 @@ const Navigator = ({ tabValue, setTabValue }) => {
   };
 
   return (
+    <div dir="rtl">
     <AppBar color="transparent" position="relative" sx={{ padding: "15px" }}>
       {/* Title */}
       <Typography variant="h3">כל מילה בדיחה</Typography>
@@ -56,6 +57,7 @@ const Navigator = ({ tabValue, setTabValue }) => {
           {(authCtx.isLoggedIn && authCtx.token && authCtx.isAdmin) && <Tab value="/admin" label="אדמין" key="admin"/>}
       </Tabs>
     </AppBar>
+    </div>
   );
 };
 
