@@ -7,8 +7,16 @@ const useValidate = (validationFunc) => {
 
     const hasError = isTouched && !isInputValid;
 
-    const onChange = () => {
-        const value = inputRef.current.value;
+    const onChange = (givenValue) => {
+        let value = inputRef.current;
+
+        if(!inputRef.current){
+            value = givenValue
+        } else {
+            value = inputRef.current.value
+        }
+
+        console.log(value)
         if(validationFunc(value.trim())){
             setIsInputValid(true);
         }else{

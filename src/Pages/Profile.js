@@ -7,7 +7,7 @@ import { Typography } from "@mui/material";
 
 const Profile = () => {
   const {userJokes} = useSelector(state => state.jokesData);
-
+  console.log(userJokes)
   return (
     <div>
       <h1>Profile</h1>

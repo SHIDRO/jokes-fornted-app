@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { jokesActions } from "../store/store";
 
 let isInitial = true;
-const JokesItem = ({ title, content, likes, profilePage, approved, adminPage, id }) => {
+const JokesItem = ({ title, content, likes, profilePage, approved, adminPage, id, userData, hashtag }) => {
   const [like, setLike] = useState(false);
   const authCtx = useContext(authContext);
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const JokesItem = ({ title, content, likes, profilePage, approved, adminPage, id
         dislikes: true
       }
     }
-    console.log('Whats upppppp');
     // console.log(body);
     // fetch('http://localhost:8080/joker/like-joke', {
     //   method: 'PATCH',
@@ -61,8 +60,7 @@ const JokesItem = ({ title, content, likes, profilePage, approved, adminPage, id
     //   console.log(err);
     // })
   }, [id, like]);
-  console.log("approved", approved, profilePage)
-  const likeDislike = () => {
+    const likeDislike = () => {
 
     setLike(preValue => !preValue);
   }
@@ -110,6 +108,22 @@ const JokesItem = ({ title, content, likes, profilePage, approved, adminPage, id
           {content}
         </Typography>
 
+          <Typography
+          
+            sx={{ marginTop: "20px", fontWeight: 'bold', color: hashtag.color }}
+            align="left"
+            variant="body2"
+          >#{hashtag.hashtag}</Typography>
+        
+        {userData.username && (
+          <Typography
+          
+            sx={{ marginTop: "10px", fontWeight: 'bold' }}
+            align="left"
+            variant="body2"
+            color="text.secondary"
+          >creator: {userData.username}</Typography>
+        )}
         {profilePage && !approved && (
           <Typography
             sx={{ color: "#00b359", marginTop: "20px" }}

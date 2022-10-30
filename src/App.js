@@ -23,12 +23,14 @@ const routes = [
   {path: '/admin', index: 3}
 ];
 
-//1. populate data in users profile and home page.
-//2. post a joke form
-//    .add to - waiting the admin to accept
-//    .then add it to jokes collection (in the server)
-//3.   make an admin user.
-//4.   deploy!
+
+//3. display the right joke by hashtag
+//4. make sure changes are viewd
+// ---
+//4. add sorting mechanisem
+//5. add search bar
+//6. finish server!
+//7. deploy
 
 function App() {
   const jokes = useSelector(state => state.jokesData)
@@ -38,7 +40,7 @@ function App() {
 
   const dispatch = useDispatch();
 
-  // console.log(jokes);
+  console.log(jokes);
   // console.log("Re-rendered");
   // console.log(authCtx);
   // console.log(tabValue);
@@ -142,6 +144,22 @@ function App() {
       .then((resData) => {
         // console.log(resData);
         dispatch(jokesActions.setGlobalJokes(resData.jokes));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/joker/hashtags")
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Failed to hashtags");
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        dispatch(jokesActions.setHashtags(resData.hashtags))
       })
       .catch((err) => {
         console.log(err);

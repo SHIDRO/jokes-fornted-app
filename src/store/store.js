@@ -2,7 +2,7 @@ import {createSlice, configureStore} from '@reduxjs/toolkit';
 
 const jokesSlice = createSlice({
     name: 'jokes_slice',
-    initialState: {userJokes: [], globalJokes: [], adminJokes: []},
+    initialState: {userJokes: [], globalJokes: [], adminJokes: [], hashtags: []},
     reducers: {
         setUserJokes(state, action){
             state.userJokes = action.payload;
@@ -42,6 +42,9 @@ const jokesSlice = createSlice({
                 updatedGlobalJokes[foundJokeIndex].likes -= 1;
             }
             
+        },
+        setHashtags(state, action){
+            state.hashtags = [...action.payload];
         }
     }
 });

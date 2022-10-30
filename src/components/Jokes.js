@@ -35,6 +35,8 @@ const Jokes = ({ jokes, profilePage, adminPage }) => {
                 likes={j.likes}
                 approved={j.approved}
                 profilePage={profilePage}
+                userData={j.userId}
+                hashtag={j.hashtag}
               />
             </Grid>
           );
