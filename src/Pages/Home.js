@@ -15,6 +15,11 @@ const Home = () => {
   if(!searchInput){
     homeJokes = globalJokes
   }else {
+    // show hashtag that much the searchInput
+    const foundHashtags = hashtags.filter(h => {
+      return h.hashtag.includes(searchInput);
+    })
+
     homeJokes = globalJokes.filter(j => {
        if(j.content.includes(searchInput)){
         return true
@@ -24,12 +29,10 @@ const Home = () => {
     })
   }
 
-  console.log('Home Jokes',homeJokes)
-
   if(chosenHashtag !== ""){
     homeJokes = globalJokes.filter(j => {
       return j.hashtag.hashtag === chosenHashtag
-    })
+    });
   }
 
   const onChangeHashtagHandler = (e) => {
