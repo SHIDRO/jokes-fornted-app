@@ -13,6 +13,8 @@ import {jokesActions} from './store/store';
 import Home from './Pages/Home';
 import Profile from "./Pages/Profile";
 import Admin from "./Pages/Admin";
+import SearchBar from "./components/SearchBar";
+import HomeByHashtag from "./Pages/HomeByHashtag";
 
 const routes = [
   { path: "/", index: 0 },
@@ -48,9 +50,12 @@ function App() {
   useEffect(() => {
     const updatedIndicator = routes.find(
       (r) => r.path === location.pathname
-    ).path;
+    );
 
-    setTabValue(updatedIndicator);
+    if(!updatedIndicator){
+      return setTabValue('/');
+    }
+    return setTabValue(updatedIndicator.path);
   }, []);
 
   useEffect(() => {
@@ -173,6 +178,7 @@ function App() {
       <Container maxWidth="lg">
         <Routes>
           <Route path="/" element={<Home/>} />
+          <Route path="/:hashtagName" element={<HomeByHashtag/>} />
 
           {authCtx.isLoggedIn && (
             <Route path="/post-joke" element={<PostJoke />} />
