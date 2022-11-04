@@ -95,7 +95,6 @@ const Signup = () => {
           throw new Error(resData.message);
         }
 
-        console.log(resData)
         login(resData.token);
         navigate('/')
       })

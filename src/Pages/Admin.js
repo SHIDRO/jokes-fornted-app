@@ -1,13 +1,19 @@
 import { Button, TextField, Typography } from "@mui/material";
 import { Container } from "@mui/system";
-import React, { useContext } from "react";
-
-import { useSelector } from "react-redux";
+import React, { useContext, useEffect } from "react";
+import { jokesActions } from "../store/store";
+import { useSelector, useDispatch } from "react-redux";
 import Jokes from "../components/Jokes";
 import useValidate from "../hooks/useValidate";
 import { authContext } from "../store/AuthContextProvider";
+import { useLocation, useNavigate } from "react-router-dom";
+import PaginationSection from "../components/PaginationSection";
+import usePagination from "../hooks/usePagination";
 
 const Admin = () => {
+  const navigate = useNavigate();
+  const {currentPage, totalPages, setTotalPages, location} = usePagination();
+  const dispatch = useDispatch();
   const authCtx = useContext(authContext);
   const { adminJokes } = useSelector((state) => state.jokesData);
   const {
@@ -36,6 +42,35 @@ const Admin = () => {
     return false;
   });
 
+  // useEffect(() => {
+  //   if(adminJokes.length === 0){
+  //     navigate(location.pathname + '?p=1')
+  //   }
+  // }, [adminJokes, navigate, location.pathname])
+
+  useEffect(() => {
+    if (!authCtx.isAdmin || !authCtx.isLoggedIn || !authCtx.token) return;
+
+    fetch(`http://localhost:8080/joker/pending-jokes?p=${currentPage}`, {
+      method: "GET",
+      headers: {
+        Authorization: authCtx.token,
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200) {
+          throw new Error("Failed to fetch pending jokes");
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        console.log(resData)
+        setTotalPages(resData.totalPages)
+        dispatch(jokesActions.setAdminJokes(resData.jokes));
+      })
+      .catch(console.log);
+  }, [authCtx, dispatch, currentPage]);
+
   const isFormValid = isHashtagInputValid && isColorInputValid;
 
   const onSubmitHashtag = () => {
@@ -59,9 +94,8 @@ const Admin = () => {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData.message);
-        hashtagInputRef.current.value = ""
-        colorInputRef.current.value = ""
+        hashtagInputRef.current.value = "";
+        colorInputRef.current.value = "";
       })
       .catch(console.log);
   };
@@ -130,7 +164,9 @@ const Admin = () => {
             variant="filled"
           />
 
-          <Button onClick={onSubmitHashtag} variant="contained">צור</Button>
+          <Button onClick={onSubmitHashtag} variant="contained">
+            צור
+          </Button>
         </div>
       </Container>
 
@@ -138,7 +174,14 @@ const Admin = () => {
       <div dir="rtl">
         <Typography variant="h4">מחכים לאישור: </Typography>
       </div>
-      <Jokes jokes={adminJokes} profilePage={false} adminPage={true} />
+      {adminJokes.length > 0 ? (
+        <div>
+          <Jokes jokes={adminJokes} profilePage={false} adminPage={true} />{" "}
+          <PaginationSection numOfPages={totalPages} />
+        </div>
+      ) : (
+        <h2>Didn't find any jokes</h2>
+      )}
     </Container>
   );
 };

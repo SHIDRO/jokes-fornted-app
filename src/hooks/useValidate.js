@@ -16,7 +16,7 @@ const useValidate = (validationFunc) => {
             value = inputRef.current.value
         }
 
-        console.log(value)
+        // console.log(value)
         if(validationFunc(value.trim())){
             setIsInputValid(true);
         }else{

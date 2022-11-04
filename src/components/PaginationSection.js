@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Pagination } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const PaginationSection = ({ numOfPages }) => {
-  const [pageNumber, setPageNumber] = useState(1);
+let isInitial = true;
+
+const PaginationSection = React.memo(({ numOfPages, pageNumber, setPageNumber }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+
+  if(!numOfPages){
+    numOfPages = 1;
+  }
 
   const onChange = (e, numOfPage) => {
     setPageNumber(numOfPage);
   };
 
   useEffect(() => {
-    let responseStatus;
+    if(isInitial){
+      isInitial = false
+      return;
+    }
 
-    console.log("Fetched page number:", pageNumber);
-    // fetch(`http://localhost:8080/joker/jokes?page=${pageNumber}`)
-    //   .then((res) => {
-    //     responseStatus = res.status;
-    //     return res.json();
-    //   })
-    //   .then((resData) => {
-    //     if (responseStatus !== 201 && responseStatus !== 200) {
-    //       throw new Error(resData.message);
-    //     }
-    //     //change jokes with redux
-    //   })
-    //   .catch(console.log);
-  }, [pageNumber]);
+    navigate(`${location.pathname}?p=${pageNumber}`)
+  }, [pageNumber, location.pathname]);
 
   return (
     <div
@@ -37,9 +37,9 @@ const PaginationSection = ({ numOfPages }) => {
       }}
     >
       {/* put dynamic number of pages */}
-      <Pagination color="primary" onChange={onChange} count={numOfPages} />
+      <Pagination color="primary" onChange={onChange} count={numOfPages} page={pageNumber}/>
     </div>
   );
-};
+});
 
 export default PaginationSection;

@@ -12,14 +12,18 @@ import {
 
 import useValidate from "../hooks/useValidate";
 import { authContext } from "../store/AuthContextProvider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { jokesActions, postAndfetchUserJokes } from "../store/store";
+import ClearIcon from '@mui/icons-material/Clear';
 
 const PostJoke = () => {
+  const [includeHashtags, setIncludeHashtags] = useState([]);
   const [chosenHashtag, setChosenHashtag] = useState("");
   const [chosenHashtagColor, setChosenHashtagColor] = useState("");
   const [hasError, setHasError] = useState({});
   const authCtx = useContext(authContext);
   const { hashtags } = useSelector((state) => state.jokesData);
+  const dispatch = useDispatch();
 
   const {
     onChange: onChangeTitle,
@@ -66,15 +70,15 @@ const PostJoke = () => {
     const title = titleInputRef.current.value;
     const content = contentInputRef.current.value;
 
-    const hashtagId = hashtags.find(h => h.hashtag === chosenHashtag)._id;
-
+    // const hashtagId = hashtags.find((h) => h.hashtag === chosenHashtag)._id;
+    //dispatch this new Func actions
     let responseStatus;
     fetch("http://localhost:8080/joker/new-joke", {
       method: "POST",
       body: JSON.stringify({
         title: title,
         content: content,
-        hashtagId: hashtagId
+        hashtags: includeHashtags.map(hashtag => hashtag._id),
       }),
       headers: {
         "Content-Type": "application/json",
@@ -87,25 +91,37 @@ const PostJoke = () => {
         return res.json();
       })
       .then((resData) => {
-        console.log(responseStatus);
         if (responseStatus !== 201 && responseStatus !== 200) {
           throw new Error(resData.message);
         }
+        dispatch(jokesActions.addToUserlJokes(resData.post));
+        titleInputRef.current.value = "";
+        contentInputRef.current.value = "";
+        setIncludeHashtags([])
       })
       .catch((err) => {
         console.log(err);
-        setHasError(err);
       });
   };
 
   const onChangeHashtagHandler = (e) => {
+    const foundHashtag = hashtags.find((h) => h.hashtag === e.target.value);
+
+    setIncludeHashtags((preValue) => {
+      const alreadyExists = preValue.find(p => p._id === foundHashtag._id)
+      if(alreadyExists) return preValue;
+      let newValue = [...preValue, foundHashtag];
+      return newValue;
+    });
+
     setChosenHashtag(e.target.value);
     onChangeHashtagValidator(e.target.value);
-    const color = hashtags.find((h) => h.hashtag === e.target.value).color;
+    const color = foundHashtag.color;
     setChosenHashtagColor(color);
   };
 
-  const isFormValid = isTitleInputValid && isContentInputValid && isHashtagInputValid;
+  const isFormValid =
+    isTitleInputValid && isContentInputValid && isHashtagInputValid;
 
   return (
     <div
@@ -133,9 +149,35 @@ const PostJoke = () => {
         variant="outlined"
       />
 
-        {hashtagHasError && <Typography sx={{ color: "red" }} variant="subtitle2">
+      {hashtagHasError && (
+        <Typography sx={{ color: "red" }} variant="subtitle2">
           Please choose a hashtag.
-        </Typography>}
+        </Typography>
+      )}
+
+      {includeHashtags.length > 0 && (
+        <div>
+          {includeHashtags.map((hashtag) => {
+            return (
+              <Button
+              key={hashtag._id}
+              startIcon={<ClearIcon/>}
+                variant="outlined"
+                onClick={() => {
+                  setIncludeHashtags((preValue) => {
+                    let newValue = preValue.filter(p => p._id !== hashtag._id);
+                    return newValue;
+                  })
+                }}
+                sx={{ margin: 'auto auto', '.hover': {color: hashtag.color} ,color: hashtag.color, borderColor: hashtag.color}}
+              >
+                # {hashtag.hashtag}
+              </Button>
+            );
+          })}
+        </div>
+      )}
+
       <Box sx={{ maxWidth: 180, float: "right" }}>
         <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="demo-simple-select-filled-label">#</InputLabel>

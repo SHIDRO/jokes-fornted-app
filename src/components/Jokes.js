@@ -1,7 +1,7 @@
 import { Grid, Typography, Container } from "@mui/material";
 import JokesItem from "./JokesItem";
 
-const Jokes = ({ jokes, profilePage, adminPage }) => {
+const Jokes = ({ jokes, profilePage, adminPage, homePage, hashtagPage }) => {
   return (
     <Container maxWidth="lg">
       <Grid
@@ -28,6 +28,8 @@ const Jokes = ({ jokes, profilePage, adminPage }) => {
               xs={12}
             >
               <JokesItem
+                homePage={homePage}
+                hashtagPage={hashtagPage}
                 id={j._id}
                 adminPage={adminPage}
                 title={j.title}
@@ -36,7 +38,8 @@ const Jokes = ({ jokes, profilePage, adminPage }) => {
                 approved={j.approved}
                 profilePage={profilePage}
                 userData={j.userId}
-                hashtag={j.hashtag}
+                hashtags={j.hashtags}
+                usersLiked={j.usersLiked}
               />
             </Grid>
           );

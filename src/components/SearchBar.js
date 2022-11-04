@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Autocomplete , TextField} from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-
+import { useDispatch } from 'react-redux';
+import { jokesActions } from '../store/store';
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
@@ -46,19 +47,24 @@ const Search = styled('div')(({ theme }) => ({
     },
   }));
 
-const SearchBar = ({ setSearchInput}) => {
+const SearchBar = ({ setSearchInput, setLoading, searchInput, setPageNumber}) => {
+
+  const onChangeHandler = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+
+    setLoading(true);
+}
 
     return (
     
-    <Search>
+    <Search sx={{marginBottom: '20px'}}>
     <SearchIconWrapper>
       <SearchIcon />
     </SearchIconWrapper>
     <StyledInputBase
-        onChange={(e) => {
-            setSearchInput(e.target.value)
-        }}
-        
+        onChange={onChangeHandler}
+        value={searchInput}
       placeholder="Search…"
       inputProps={{ 'aria-label': 'search' }}
     />
