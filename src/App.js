@@ -13,7 +13,6 @@ import Home from './Pages/Home';
 import Profile from "./Pages/Profile";
 import Admin from "./Pages/Admin";
 import HomeByHashtag from "./Pages/HomeByHashtage";
-import { Render } from "./components/Render";
 
 const routes = [
   { path: "/", index: 0 },
