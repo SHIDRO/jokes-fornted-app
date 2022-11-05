@@ -75,7 +75,7 @@ const Signup = () => {
 
     let responseStatus;
 
-    fetch("http://localhost:8080/auth/signup", {
+    fetch("https://mysterious-sands-95529.herokuapp.com/auth/signup", {
       method: "POST",
       body: JSON.stringify({
         username: username,

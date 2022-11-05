@@ -73,7 +73,7 @@ const PostJoke = () => {
     // const hashtagId = hashtags.find((h) => h.hashtag === chosenHashtag)._id;
     //dispatch this new Func actions
     let responseStatus;
-    fetch("http://localhost:8080/joker/new-joke", {
+    fetch("https://mysterious-sands-95529.herokuapp.com/joker/new-joke", {
       method: "POST",
       body: JSON.stringify({
         title: title,

@@ -45,7 +45,7 @@ function App() {
   useEffect(() => {
     if(!authCtx.token) return;
 
-    fetch('http://localhost:8080/auth/get-user-data', {
+    fetch('https://mysterious-sands-95529.herokuapp.com/auth/get-user-data', {
       method: 'GET',
       headers: {
         'Authorization': authCtx.token
@@ -66,16 +66,24 @@ function App() {
 
   useEffect(() => {
     const currentTime = new Date().getTime();
-    const expirationDate = localStorage.getItem("expiration-date");
+    const expirationDate = Number(localStorage.getItem("expiration-jokesKey-date"));
+    const token = localStorage.getItem("jokes-key");
 
-    if (currentTime < expirationDate) {
-      const token = localStorage.getItem("JWT-key");
+    let timeLeft = expirationDate - currentTime 
+
+    if (token && timeLeft > 0) {
       authCtx.login(token, true, {isAdmin: false});
+      setTimeout(() => {
+        authCtx.logout();
+      }, timeLeft)
+    } else {
+      localStorage.removeItem("expiration-jokesKey-date");
+      localStorage.removeItem("jokes-key");
     }
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/joker/hashtags")
+    fetch("https://mysterious-sands-95529.herokuapp.com/joker/hashtags")
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("Failed to hashtags");

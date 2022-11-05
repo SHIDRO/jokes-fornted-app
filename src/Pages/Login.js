@@ -13,7 +13,6 @@ const Login = () => {
     const {login} = useContext(authContext);
 
 
-    console.log('resErorr:', resError);
   const {
     onChange: onChangeEmail,
     onBlur: onBlurEmail,
@@ -47,7 +46,7 @@ const Login = () => {
     if(!isFormValid) return;
 
     let responseStatus;
-    fetch('http://localhost:8080/auth/login', {
+    fetch('https://mysterious-sands-95529.herokuapp.com/auth/login', {
         method: 'POST',
         body: JSON.stringify({
             email: email,
@@ -64,7 +63,6 @@ const Login = () => {
       if(responseStatus !== 200){
         throw new Error(resData.message);
       }
-        console.log(resData)
         // let isAdmin = resData.userData.isAdmin;
         login(resData.token, false, resData.userData);
         navigate('/');

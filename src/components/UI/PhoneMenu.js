@@ -21,7 +21,6 @@ const routes = [
 const PhoneMenu = ({ open, setOpen }) => {
   const navigate = useNavigate();
   const authCtx = useContext(authContext);
-  console.log(authCtx)
   const onCloseDrawer = (event) => {
     if (
       event.type === "keydown" &&

@@ -2,16 +2,17 @@ import React, {useEffect, useState} from 'react';
 import PaginationSection from "../components/PaginationSection";
 import Jokes from "../components/Jokes";
 import { useSelector, useDispatch } from "react-redux";
-import { Typography } from "@mui/material";
+import { Typography, Button, Divider } from "@mui/material";
 import { useContext } from "react";
 import { authContext } from "../store/AuthContextProvider";
 import { jokesActions } from '../store/store';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import usePagination from '../hooks/usePagination';
 
 //pass to jokes only the user's jokes
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState(1);
   const dispatch = useDispatch();
   const {userJokes} = useSelector(state => state.jokesData);
@@ -21,7 +22,7 @@ const Profile = () => {
   useEffect(() => {
     if(!authCtx.token || !authCtx.isLoggedIn)return;
 
-    fetch(`http://localhost:8080/joker/user-jokes?p=${currentPage}`, {
+    fetch(`https://mysterious-sands-95529.herokuapp.com/joker/user-jokes?p=${currentPage}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,17 +48,23 @@ const Profile = () => {
   return (
     <div>
       <h1>Profile</h1>
-     
 
-      {userJokes.length > 0 ? <>
+
+      {userJokes.length > 0 ?  <div>
         <h3>Your Jokes:</h3>
         <Jokes jokes={userJokes} profilePage={true}/>
       <PaginationSection numOfPages={totalPages} pageNumber={pageNumber} setPageNumber={setPageNumber} />
-      </>
+      </div>
       : 
       <Typography sx={{color: '#808080'}} variant="h4" align="center">We didn't find any of your jokes.</Typography>
       }
-      
+      <Divider/>
+      <Button onClick={() => {
+        authCtx.logout() 
+        navigate('/')
+        }} sx={{margin: '20px 0'}} variant="outlined" color="error">
+  Log out
+</Button>
     </div>
   );
 };

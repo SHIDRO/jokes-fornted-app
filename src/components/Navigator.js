@@ -32,7 +32,7 @@ const Navigator = ({ tabValue, setTabValue }) => {
       <AppBar color="transparent" position="relative" sx={{ padding: "15px" }}>
 
         {/* Title */}
-        <Typography sx={{display: 'inline-block'}} variant="h3">כל מילה בדיחה</Typography>
+        <Typography sx={{display: 'inline-block'}} variant="h4">כל מילה בדיחה</Typography>
 
         {/* Navbar */}
         {matches && <IconButton
@@ -41,7 +41,7 @@ const Navigator = ({ tabValue, setTabValue }) => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{width: '10%', display: 'inline', float: 'left', position: 'absolute', left: 20}}
+            sx={{width: '10%', display: 'inline', float: 'left', position: 'absolute', top: 10, left: 30}}
           >
             <MenuIcon />
           </IconButton>}
@@ -75,7 +75,7 @@ const Navigator = ({ tabValue, setTabValue }) => {
                   <Tab value="/signup" label="הירשם" key="signup" />,
                 ]}
 
-            {authCtx.isLoggedIn && authCtx.token && authCtx.isAdmin && (
+            {(authCtx.isLoggedIn && authCtx.token && authCtx.isAdmin) && (
               <Tab value="/admin" label="אדמין" key="admin" />
             )}
           </Tabs>

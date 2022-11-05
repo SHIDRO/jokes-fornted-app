@@ -51,7 +51,7 @@ const Admin = () => {
   useEffect(() => {
     if (!authCtx.isAdmin || !authCtx.isLoggedIn || !authCtx.token) return;
 
-    fetch(`http://localhost:8080/joker/pending-jokes?p=${currentPage}`, {
+    fetch(`https://mysterious-sands-95529.herokuapp.com/joker/pending-jokes?p=${currentPage}`, {
       method: "GET",
       headers: {
         Authorization: authCtx.token,
@@ -64,7 +64,6 @@ const Admin = () => {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData)
         setTotalPages(resData.totalPages)
         dispatch(jokesActions.setAdminJokes(resData.jokes));
       })
@@ -76,7 +75,7 @@ const Admin = () => {
   const onSubmitHashtag = () => {
     if (!isFormValid) return;
 
-    fetch("http://localhost:8080/admin/new-hashtag", {
+    fetch("https://mysterious-sands-95529.herokuapp.com/admin/new-hashtag", {
       method: "POST",
       body: JSON.stringify({
         givenHashtag: hashtagInputRef.current.value,

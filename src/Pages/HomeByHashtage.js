@@ -17,8 +17,6 @@ const HomeByHashtag = ({}) => {
   const { hashtags } = useSelector((state) => state.jokesData);
   const { currentPage, totalPages, setTotalPages } = usePagination();
 
-  console.log(jokesByHashtag)
-
   const foundHashtag = hashtags.find(
     (h) => h.hashtag.toLowerCase() === hashtagName.toLowerCase()
   );
@@ -27,7 +25,7 @@ const HomeByHashtag = ({}) => {
     if (!foundHashtag) return;
 
     fetch(
-      `http://localhost:8080/joker/jokes/${foundHashtag._id}/?p=${currentPage}`
+      `https://mysterious-sands-95529.herokuapp.com/joker/jokes/${foundHashtag._id}/?p=${currentPage}`
     )
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
@@ -50,8 +48,6 @@ const HomeByHashtag = ({}) => {
       </h1>
     );
   }
-
-  console.log(jokesByHashtag);
 
   return (
     <div>

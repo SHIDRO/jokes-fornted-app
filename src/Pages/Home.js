@@ -30,7 +30,7 @@ const Home = React.memo(() => {
   useEffect(() => {
     setLoading(true);
     fetch(
-      `http://localhost:8080/joker/jokes?p=${currentPage}&con=${searchInput}`
+      `https://mysterious-sands-95529.herokuapp.com/joker/jokes?p=${currentPage}&con=${searchInput}`
     )
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
@@ -97,7 +97,6 @@ const Home = React.memo(() => {
       <h1>Home</h1>
       <SearchBar
         setPageNumber={setPageNumber}
-        setTotalPages={console.log}
         setLoading={setLoading}
         setSearchInput={setSearchInput}
         searchInput={searchInput}

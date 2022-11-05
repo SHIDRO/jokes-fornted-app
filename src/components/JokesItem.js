@@ -3,11 +3,13 @@ import { Card, Typography, Button } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import Profile from "../Pages/Profile";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { authContext } from "../store/AuthContextProvider";
 import { useDispatch } from "react-redux";
+import RecommendIcon from "@mui/icons-material/Recommend";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { jokesActions } from "../store/store";
 
 const JokesItem = ({
@@ -65,7 +67,7 @@ const JokesItem = ({
       };
     }
 
-    fetch("http://localhost:8080/joker/like-joke", {
+    fetch("https://mysterious-sands-95529.herokuapp.com/joker/like-joke", {
       method: "PATCH",
       body: JSON.stringify(body),
       headers: {
@@ -120,16 +122,19 @@ const JokesItem = ({
     if (!adminPage) return;
 
     let responseStatus;
-    fetch("http://localhost:8080/joker/update-joke-status", {
-      method: "PATCH",
-      body: JSON.stringify({
-        jokeId: id,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authCtx.token,
-      },
-    })
+    fetch(
+      "https://mysterious-sands-95529.herokuapp.com/joker/update-joke-status",
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          jokeId: id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authCtx.token,
+        },
+      }
+    )
       .then((res) => {
         responseStatus = res.status;
         return res.json();
@@ -215,9 +220,15 @@ const JokesItem = ({
             <Button
               sx={{ padding: "auto" }}
               startIcon={
-                <ThumbUpIcon
-                  sx={{ margin: "auto", padding: "2px 0px 5px 6px" }}
-                />
+                like ? (
+                  <FavoriteIcon
+                    sx={{ margin: "auto", padding: "2px 0px 5px 6px" }}
+                  />
+                ) : (
+                  <FavoriteBorderIcon
+                    sx={{ margin: "auto", padding: "2px 0px 5px 6px" }}
+                  />
+                )
               }
               onClick={likeDislike}
               variant="outlined"
@@ -225,7 +236,6 @@ const JokesItem = ({
             >
               {likes}
             </Button>
-            <Button size="small">Share</Button>
           </>
         )}
         {adminPage && (
